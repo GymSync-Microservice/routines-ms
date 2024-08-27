@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+enum Genre {
+  MALE
+  FEMALE
+}
+
+enum Days {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Routine {
+  id    Int     @id @default(autoincrement())
+  name  String  @db.VarChar(100)
+  show  Boolean
+  genre Genre
+  day   Days
+
+  routine_exercise Routine_excercise[]
+
+  routine_type Routine_type @relation(fields: [routine_type_id], references: [id])
+  routine_type_id Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Routine_type {
+  id    Int     @id @default(autoincrement())
+  name  String  @db.VarChar(100)
+
+  routines Routine[]
+}
+
+model Routine_excercise {
+  id    Int     @id @default(autoincrement())
+
+  exercise Exercise @relation(fields: [exercise_id], references: [id])
+  exercise_id Int
+
+  routine Routine @relation(fields: [routine_id], references: [id])
+  routine_id Int
+}
+
+model Exercise {
+  id    Int     @id @default(autoincrement())
+  name  String  @db.VarChar(100)
+  sets  Int
+  reps  Int
+  description String @db.Text
+  image_url String @db.VarChar(255)
+  video_url String @db.VarChar(255)
+
+  routine_exercise Routine_excercise[]
+
+  muscle_exercise Muscle_exercise[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Muscle {
+  id    Int     @id @default(autoincrement())
+  name  String  @db.VarChar(100)
+
+  muscle_exercise Muscle_exercise[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Muscle_exercise {
+  id    Int     @id @default(autoincrement())
+
+  muscle Muscle @relation(fields: [muscle_id], references: [id])
+  muscle_id Int
+
+  exercise Exercise @relation(fields: [exercise_id], references: [id])
+  exercise_id Int
+}
