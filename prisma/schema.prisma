@@ -42,6 +42,8 @@ model Routine {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("routine")
 }
 
 model Routine_type {
@@ -49,6 +51,8 @@ model Routine_type {
   name  String  @db.VarChar(100)
 
   routines Routine[]
+
+  @@map("routine_type")
 }
 
 model Routine_excercise {
@@ -59,6 +63,8 @@ model Routine_excercise {
 
   routine Routine @relation(fields: [routine_id], references: [id])
   routine_id Int
+
+  @@map("routine_exercise")
 }
 
 model Exercise {
@@ -76,6 +82,8 @@ model Exercise {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("exercise")
 }
 
 model Muscle {
@@ -86,6 +94,8 @@ model Muscle {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("muscle")
 }
 
 model Muscle_exercise {
@@ -96,4 +106,6 @@ model Muscle_exercise {
 
   exercise Exercise @relation(fields: [exercise_id], references: [id])
   exercise_id Int
+
+  @@map("muscle_exercise")
 }

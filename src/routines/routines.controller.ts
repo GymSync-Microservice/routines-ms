@@ -4,6 +4,7 @@ import { CreateRoutineDto } from './dto/create-routine.dto';
 import { UpdateRoutineDto } from './dto/update-routine.dto';
 import { PaginationDto } from 'src/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { AddExerciseToRoutineDto } from './dto/add-exercise-to-routine.dto';
 
 @Controller('routines')
 export class RoutinesController {
@@ -33,6 +34,16 @@ export class RoutinesController {
   @MessagePattern({ cmd: 'update_routine' })
   update(@Payload() updateRoutineDto: UpdateRoutineDto) {
     return this.routinesService.update(updateRoutineDto.id, updateRoutineDto);
+  }
+
+  @MessagePattern({ cmd: 'add_exercise_to_routine' })
+  addExerciseToRoutine(@Payload() addExerciseToRoutineDto: AddExerciseToRoutineDto) {
+    return this.routinesService.addExerciseToRoutine(addExerciseToRoutineDto);
+  }
+
+  @MessagePattern({ cmd: 'remove_exercise_from_routine' })
+  removeExerciseFromRoutine(@Payload() addExerciseToRoutineDto: AddExerciseToRoutineDto){
+    return this.routinesService.removeExerciseFromRoutine(addExerciseToRoutineDto);
   }
   
 }

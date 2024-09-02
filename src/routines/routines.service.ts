@@ -1,10 +1,12 @@
-import { Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { CreateRoutineDto } from './dto/create-routine.dto';
 import { UpdateRoutineDto } from './dto/update-routine.dto';
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from 'src/prisma-db/prisma-db.service';
 import { PaginationDto } from 'src/common';
 import { Genre } from './types/routines.types';
+import { RpcException } from '@nestjs/microservices';
+import { AddExerciseToRoutineDto } from './dto/add-exercise-to-routine.dto';
 
 @Injectable()
 export class RoutinesService extends PrismaClient {
@@ -37,8 +39,8 @@ export class RoutinesService extends PrismaClient {
 
     return {
       metadata: {
-        totalPages: totalPages,
-        currentPage: page,
+        total: totalPages,
+        page: page,
         lastPage: lastPage,
       },
       data: await this.routine.findMany({
@@ -53,10 +55,20 @@ export class RoutinesService extends PrismaClient {
       where: {
         id: id,
       },
+      include: {
+        routine_exercise: {
+          include: {
+            exercise: true,
+          }
+        },
+      }
     })
 
     if(!routine) {
-      throw new NotFoundException(`No routine found with id ${id}`);
+      throw new RpcException({
+        message: `routine not found with id ${id}`,
+        status: HttpStatus.BAD_REQUEST,
+      });
     }
 
     return routine;
@@ -75,5 +87,44 @@ export class RoutinesService extends PrismaClient {
       },
     })
   }
+
+  async addExerciseToRoutine(addExerciseToRoutineDto: AddExerciseToRoutineDto){
+
+    const {exercise_id, routine_id} = addExerciseToRoutineDto;
+
+    return this.routine_excercise.create({
+      data: {
+        exercise_id: exercise_id,
+        routine_id: routine_id,
+      }
+    })
+
+  }
+
+  async removeExerciseFromRoutine(addExerciseToRoutineDto: AddExerciseToRoutineDto){
+    const {exercise_id, routine_id} = addExerciseToRoutineDto;
+
+    const routineExercise = await this.routine_excercise.findFirst({
+      where: {
+        exercise_id,
+        routine_id,
+      },
+    });
+
+    if(!routineExercise){
+      throw new RpcException({
+        message: `routineExercise no record found`,
+        status: HttpStatus.BAD_REQUEST,
+      });
+    }
+
+    return this.routine_excercise.delete({
+      where: {
+        id: routineExercise.id,
+      },
+    });
+  }
+
+  
 
 }

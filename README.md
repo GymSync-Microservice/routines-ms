@@ -7,3 +7,4 @@
 3. Crear un archivo `.env` con las variables de entorno basado en el archivo `.env.template`
 4. ejecutar la migracion `npx prisma migrate dev`
 5. Ejecutar el microservicio `npm run start:dev`
+

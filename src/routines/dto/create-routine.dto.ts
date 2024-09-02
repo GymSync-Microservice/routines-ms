@@ -1,4 +1,4 @@
-import { IsBoolean, IsEnum, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsInt, IsString } from 'class-validator';
 import { Days, Genre } from '../types/routines.types';
 
 
@@ -14,6 +14,9 @@ export class CreateRoutineDto {
   public genre: Genre;
   
   @IsEnum(Days)
-  public day: Days; 
+  public day: Days;
+  
+  @IsInt()
+  public routine_type_id: number; // Agregado el campo routine_type_id
 
 }
