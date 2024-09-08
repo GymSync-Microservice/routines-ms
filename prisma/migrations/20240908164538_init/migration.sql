@@ -1,42 +1,22 @@
-/*
-  Warnings:
+-- CreateEnum
+CREATE TYPE "Genre" AS ENUM ('MALE', 'FEMALE');
 
-  - You are about to drop the `Exercise` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Muscle` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Muscle_exercise` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Routine_excercise` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Routine_type` table. If the table is not empty, all the data it contains will be lost.
+-- CreateEnum
+CREATE TYPE "Days" AS ENUM ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY');
 
-*/
--- DropForeignKey
-ALTER TABLE "Muscle_exercise" DROP CONSTRAINT "Muscle_exercise_exercise_id_fkey";
+-- CreateTable
+CREATE TABLE "routine" (
+    "id" SERIAL NOT NULL,
+    "name" VARCHAR(100) NOT NULL,
+    "show" BOOLEAN NOT NULL,
+    "genre" "Genre" NOT NULL,
+    "day" "Days" NOT NULL,
+    "routine_type_id" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
--- DropForeignKey
-ALTER TABLE "Muscle_exercise" DROP CONSTRAINT "Muscle_exercise_muscle_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "Routine_excercise" DROP CONSTRAINT "Routine_excercise_exercise_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "Routine_excercise" DROP CONSTRAINT "Routine_excercise_routine_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "routine" DROP CONSTRAINT "routine_routine_type_id_fkey";
-
--- DropTable
-DROP TABLE "Exercise";
-
--- DropTable
-DROP TABLE "Muscle";
-
--- DropTable
-DROP TABLE "Muscle_exercise";
-
--- DropTable
-DROP TABLE "Routine_excercise";
-
--- DropTable
-DROP TABLE "Routine_type";
+    CONSTRAINT "routine_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "routine_type" (
